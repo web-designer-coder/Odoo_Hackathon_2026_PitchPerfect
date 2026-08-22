@@ -144,14 +144,6 @@ The application will launch at `http://localhost:5173`.
 
 ---
 
-## 🔑 Pre-Configured Test Credentials
-
-| Role | Email | Password |
-|---|---|---|
-| **Admin** | `admin@dayflow.com` | `password123` |
-| **HR Manager** | `hr@dayflow.com` | `password123` |
-| **Software Engineer** | `employee@dayflow.com` | `password123` |
-| **UI Designer** | `jane@dayflow.com` | `password123` |
 
 ---
 
