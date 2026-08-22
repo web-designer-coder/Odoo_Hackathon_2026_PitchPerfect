@@ -25,7 +25,7 @@ router.post('/check-in', protect, async (req, res) => {
     const attendance = await Attendance.findOneAndUpdate(
       { user: req.user._id, date: today },
       { checkIn: new Date(), status: 'Present' },
-      { new: true, upsert: true }
+      { returnDocument: 'after', upsert: true }
     );
     res.json(attendance);
   } catch (error) {

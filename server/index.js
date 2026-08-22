@@ -39,12 +39,33 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+  family: 4
+})
   .then(() => console.log('MongoDB Atlas Connected ✓'))
   .catch(err => {
-    console.error('MongoDB Connection Error:', err.message);
-    console.error('Tip: Check your MONGODB_URI and Atlas Network Access IP whitelist.');
+    console.error('\n======================================================');
+    console.error(' [MONGODB ATLAS CONNECTION ERROR]');
+    console.error(' Cause:', err.message);
+    console.error(' Action Required: Whitelist your current IP in MongoDB Atlas!');
+    console.error(' Go to cloud.mongodb.com -> Network Access -> Add IP Address -> 0.0.0.0/0');
+    console.error('======================================================\n');
   });
+
+// Database connectivity middleware to prevent 10s buffering timeouts when IP is blocked
+app.use((req, res, next) => {
+  if (req.path === '/' || req.path.startsWith('/api/auth/google') || req.path.startsWith('/api/auth/github')) {
+    return next();
+  }
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      message: 'MongoDB Connection Error: Your IP is not whitelisted in MongoDB Atlas. Go to cloud.mongodb.com -> Network Access -> Add IP Address (0.0.0.0/0).'
+    });
+  }
+  next();
+});
 
 app.get('/', (req, res) => res.send('Dayflow HRMS API running'));
 

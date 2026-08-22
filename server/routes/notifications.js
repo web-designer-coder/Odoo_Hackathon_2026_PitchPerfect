@@ -22,7 +22,7 @@ router.patch('/:id/read', protect, async (req, res) => {
     const n = await Notification.findOneAndUpdate(
       { _id: req.params.id, user: req.user._id },
       { isRead: true },
-      { new: true }
+      { returnDocument: 'after' }
     );
     res.json(n);
   } catch (error) {

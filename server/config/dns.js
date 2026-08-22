@@ -6,6 +6,12 @@
 import { setDefaultResultOrder } from 'node:dns';
 import dns from 'node:dns';
 
-// Override DNS servers at Node level — bypasses system DNS for this process only
-dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-setDefaultResultOrder('ipv4first');
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (e) {
+  console.warn('DNS server override notice:', e.message);
+}
+
+try {
+  setDefaultResultOrder('ipv4first');
+} catch (e) {}
